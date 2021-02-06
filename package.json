@@ -1,0 +1,39 @@
+{
+  "name": "covid-19-incidence-notifier",
+  "version": "1.0.0",
+  "description": "Get notified about new COVID-19 incidences in your location (Norway only)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Knutakir/covid-19-incidence-notifier.git"
+  },
+  "keywords": [
+    "covid-19",
+    "incidence",
+    "notifier",
+    "docker",
+    "discord"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Knutakir/covid-19-incidence-notifier/issues"
+  },
+  "homepage": "https://github.com/Knutakir/covid-19-incidence-notifier#readme",
+  "dependencies": {
+    "dayjs": "^1.10.4",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "got": "^11.8.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
