@@ -19,7 +19,7 @@
     "docker",
     "discord"
   ],
-  "author": "",
+  "author": "Knut Kirkhorn",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Knutakir/covid-19-incidence-notifier/issues"
