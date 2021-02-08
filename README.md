@@ -1,6 +1,8 @@
 # covid-19-incidence-notifier
 > 🤒⏰ Get notified about new COVID-19 incidences in your location (Norway only)
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/knutkirkhorn/covid-19-incidence-notifier)](https://hub.docker.com/r/knutkirkhorn/covid-19-incidence-notifier) [![Docker Image Size](https://badgen.net/docker/size/knutkirkhorn/covid-19-incidence-notifier)](https://hub.docker.com/r/knutkirkhorn/covid-19-incidence-notifier)
+
 Notifies on Discord if there are new COVID-19 incidences in your location (Norway only). Uses the [Corona API](https://redutv-api.vg.no/corona/v1/) from [vg.no](https://www.vg.no/) about incidences in municipalities. It notifies to a Discord channel using [Discord Webhooks](https://discord.com/developers/docs/resources/webhook).
 
 <div align="center">
