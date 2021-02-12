@@ -18,10 +18,16 @@ This will pull the image from [Docker Hub](https://hub.docker.com/) and run the 
 # Providing Discord Webhook URL
 $ docker run -d -e DISCORD_WEBHOOK_URL=<URL_HERE> knutkirkhorn/covid-19-incidence-notifier
 
-# Providing area ID
+# Providing a single area ID
 $ docker run -d \
     -e DISCORD_WEBHOOK_URL=<URL_HERE> \
-    -e AREA_ID=1577
+    -e AREA_IDS=1577
+    knutkirkhorn/covid-19-incidence-notifier
+
+# Providing two area IDs
+$ docker run -d \
+    -e DISCORD_WEBHOOK_URL=<URL_HERE> \
+    -e AREA_IDS=1577,4651
     knutkirkhorn/covid-19-incidence-notifier
 ```
 
@@ -33,10 +39,16 @@ $ docker build -t covid-19-incidence-notifier .
 # Run the built container with default configuration
 $ docker run -d -e DISCORD_WEBHOOK_URL=<URL_HERE> covid-19-incidence-notifier
 
-# Providing area ID
+# Providing a single area ID
 $ docker run -d \
     -e DISCORD_WEBHOOK_URL=<URL_HERE> \
-    -e AREA_ID=1577 \
+    -e AREA_IDS=1577 \
+    covid-19-incidence-notifier
+
+# Providing two area IDs
+$ docker run -d \
+    -e DISCORD_WEBHOOK_URL=<URL_HERE> \
+    -e AREA_IDS=1577,4651 \
     covid-19-incidence-notifier
 ```
 
@@ -62,8 +74,8 @@ Provide these with the docker run command or store these in a `.env` file. Only 
 - `WAIT_TIMEOUT` ***(optional)***
     - The time interval in milliseconds between each check to the APIs.
     - Default: `3600000` (60 minutes)
-- `AREA_ID` ***(optional)***
-    - The area ID of the municipality to notify about new incidences. Specified by a four digit number.
+- `AREA_IDS` ***(optional)***
+    - The area ID(s) of the municipality/municipalities to notify about new incidences. Specified as a single four digit number or comma separeted list of four digit numbers.
     - Default: `1577` (Volda)
     - Different municipality IDs can be viewed [here](https://redutv-api.vg.no/corona/v1/areas/municipalities/).
 - `TIME_LOCALE` ***(optional)***

@@ -34,20 +34,24 @@ const discordHookClient = new Discord.WebhookClient(webhookID, webhookToken);
 // Wait for a specified time (milliseconds)
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const {areaId} = config;
+const areaIds = config.areaIds.split(',').map(areaId => areaId.trim());
+const areas = areaIds.map(areaId => {
+    // Area ID should be a string consisting of 4 digits
+    if (areaId.length !== 4 || !/\d{4}/g.exec(areaId)) {
+        throw new Error('`AREA_IDS` needs to be a comma separated list specified by four digit number(s)');
+    }
 
-// Area ID should be a string consisting of 4 digits
-if (areaId.length !== 4 || !/\d{4}/g.exec(areaId)) {
-    throw new Error('`AREA_ID` needs to be specified by a four digit number');
-}
+    const countyId = areaId.substring(0, 2);
 
-const casesUrl = `https://redutv-api.vg.no/corona/v1/areas/municipalities/${areaId}/key`;
-const countyId = areaId.substring(0, 2);
-const visualCasesUrl = `https://www.vg.no/spesial/2020/corona/fylker/${countyId}/kommuner/${areaId}`;
-
-let lastestUpdate = '';
-let previousCases = 0;
-let firstIncidenceCheck = true;
+    return {
+        casesUrl: `https://redutv-api.vg.no/corona/v1/areas/municipalities/${areaId}/key`,
+        countyId,
+        visualCasesUrl: `https://www.vg.no/spesial/2020/corona/fylker/${countyId}/kommuner/${areaId}`,
+        lastestUpdate: '',
+        previousCases: 0,
+        firstIncidenceCheck: true
+    };
+});
 
 const trends = {
     lessThanMinLimit: 'No change',
@@ -63,45 +67,65 @@ function getChangeLast14Days(timeSeries) {
     }, 0);
 }
 
+async function checkAreaForNewIncidence(area) {
+    const response = await got(area.casesUrl, {headers: httpHeader});
+    const responseBody = JSON.parse(response.body);
+    const areaMetas = responseBody.meta;
+
+    let {
+        lastestUpdate,
+        previousCases,
+        firstIncidenceCheck
+    } = area;
+
+    if (areaMetas.updated !== lastestUpdate) {
+        lastestUpdate = areaMetas.updated;
+
+        const currentCases = areaMetas.total.cases;
+
+        // If the first iteration, run an initial check of number of cases
+        if (firstIncidenceCheck) {
+            previousCases = currentCases;
+            firstIncidenceCheck = false;
+        } else if (previousCases < currentCases) {
+            const difference = currentCases - previousCases;
+            previousCases = currentCases;
+            const locationName = areaMetas.area.name;
+            const trend = responseBody.items[2].latest;
+            const changeLast14Days = getChangeLast14Days(responseBody.items[1].data);
+
+            const embedMessage = new Discord.MessageEmbed()
+                .setColor('#b5312f')
+                .setTitle(`🤒⚠ **New COVID-19 incidence${difference > 1 ? 's' : ''}** ⚠🤒`)
+                .addField('Location', locationName)
+                .addField('Updated', dayjs(lastestUpdate).format(config.timeFormat))
+                .addField('New', difference)
+                .addField('Total', currentCases)
+                .addField('Trend', `${trends[trend.key]}`)
+                .addField('Change last 14 days', `+${changeLast14Days}`)
+                .addField('URL', `View more information [here](${area.visualCasesUrl})`);
+
+            await discordHookClient.send(embedMessage);
+        }
+    }
+
+    return {
+        ...area,
+        lastestUpdate,
+        previousCases,
+        firstIncidenceCheck
+    };
+}
+
 (async () => {
     // Make it run forever
     while (true) {
         try {
             console.log('Checking for COVID-19 incidences at:', new Date());
 
-            const response = await got(casesUrl, {headers: httpHeader});
-            const responseBody = JSON.parse(response.body);
-            const areaMetas = responseBody.meta;
-
-            if (areaMetas.updated !== lastestUpdate) {
-                lastestUpdate = areaMetas.updated;
-
-                const currentCases = areaMetas.total.cases;
-
-                // If the first iteration, run an initial check of number of cases
-                if (firstIncidenceCheck) {
-                    previousCases = currentCases;
-                    firstIncidenceCheck = false;
-                } else if (previousCases < currentCases) {
-                    const difference = currentCases - previousCases;
-                    previousCases = currentCases;
-                    const locationName = areaMetas.area.name;
-                    const trend = responseBody.items[2].latest;
-                    const changeLast14Days = getChangeLast14Days(responseBody.items[1].data);
-
-                    const embedMessage = new Discord.MessageEmbed()
-                        .setColor('#b5312f')
-                        .setTitle(`🤒⚠ **New COVID-19 incidence${difference > 1 ? 's' : ''}** ⚠🤒`)
-                        .addField('Location', locationName)
-                        .addField('Updated', dayjs(lastestUpdate).format(config.timeFormat))
-                        .addField('New', difference)
-                        .addField('Total', currentCases)
-                        .addField('Trend', `${trends[trend.key]}`)
-                        .addField('Change last 14 days', `+${changeLast14Days}`)
-                        .addField('URL', `View more information [here](${visualCasesUrl})`);
-
-                    discordHookClient.send(embedMessage);
-                }
+            // eslint-disable-next-line no-restricted-syntax
+            for (let area of areas) {
+                area = await checkAreaForNewIncidence(area);
             }
         } catch (error) {
             console.log(error);
