@@ -21,13 +21,13 @@ $ docker run -d -e DISCORD_WEBHOOK_URL=<URL_HERE> knutkirkhorn/covid-19-incidenc
 # Providing a single area ID
 $ docker run -d \
     -e DISCORD_WEBHOOK_URL=<URL_HERE> \
-    -e AREA_IDS=1577
+    -e AREA_IDS=1577 \
     knutkirkhorn/covid-19-incidence-notifier
 
 # Providing two area IDs
 $ docker run -d \
     -e DISCORD_WEBHOOK_URL=<URL_HERE> \
-    -e AREA_IDS=1577,4651
+    -e AREA_IDS=1577,4651 \
     knutkirkhorn/covid-19-incidence-notifier
 ```
 
