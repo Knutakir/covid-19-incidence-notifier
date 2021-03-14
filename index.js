@@ -91,6 +91,7 @@ async function checkAreaForNewIncidence(area) {
             const locationName = areaMetas.area.name;
             const trend = responseBody.items[2].latest;
             const changeLast14Days = getChangeLast14Days(responseBody.items[1].data);
+            console.log(` - Found new incidence(s) for ${locationName}`);
 
             const embedMessage = new Discord.MessageEmbed()
                 .setColor('#b5312f')
@@ -121,9 +122,9 @@ async function checkAreaForNewIncidence(area) {
         try {
             console.log('Checking for COVID-19 incidences at:', new Date());
 
-            // eslint-disable-next-line no-restricted-syntax
-            for (let area of areas) {
-                area = await checkAreaForNewIncidence(area);
+            for (let i = 0; i < areas.length; i++) {
+                const area = areas[i];
+                areas[i] = await checkAreaForNewIncidence(area);
             }
         } catch (error) {
             console.log(error);
