@@ -28,7 +28,6 @@ if (!(discordWebhookUrl || (discordWebhookID !== '' && discordWebhookToken !== '
 // 'https://discord.com/api/webhooks/<ID_HERE>/<TOKEN_HERE>'
 // If the Webhook URL is empty get the values from the provided ID and token
 const [webhookID, webhookToken] = discordWebhookUrl ? discordWebhookUrl.split('/').splice(5, 2) : [discordWebhookID, discordWebhookToken];
-
 const discordHookClient = new Discord.WebhookClient(webhookID, webhookToken);
 
 // Wait for a specified time (milliseconds)
@@ -45,7 +44,6 @@ const areas = areaIds.map(areaId => {
 
     return {
         casesUrl: `https://redutv-api.vg.no/corona/v1/areas/municipalities/${areaId}/key`,
-        countyId,
         visualCasesUrl: `https://www.vg.no/spesial/2020/corona/fylker/${countyId}/kommuner/${areaId}`,
         lastestUpdate: '',
         previousCases: 0,
