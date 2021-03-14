@@ -4,6 +4,7 @@ const dayjs = require('dayjs');
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 const {httpHeader} = require('./util');
 const config = require('./config');
+
 const {discordWebhookUrl, discordWebhookID, discordWebhookToken} = config;
 
 // Load dayjs locale if it's not the default `en` (English)
@@ -60,9 +61,7 @@ const trends = {
 function getChangeLast14Days(timeSeries) {
     const last14Days = timeSeries.slice(-14);
 
-    return last14Days.reduce((previous, current) => {
-        return previous + current.value;
-    }, 0);
+    return last14Days.reduce((previous, current) => previous + current.value, 0);
 }
 
 async function checkAreaForNewIncidence(area) {
@@ -124,11 +123,13 @@ async function checkAreaForNewIncidence(area) {
 
             for (let i = 0; i < areas.length; i++) {
                 const area = areas[i];
+                // eslint-disable-next-line no-await-in-loop
                 areas[i] = await checkAreaForNewIncidence(area);
             }
         } catch (error) {
             console.log(error);
         } finally {
+            // eslint-disable-next-line no-await-in-loop
             await wait(config.waitTimeout);
         }
     }
