@@ -74,36 +74,37 @@ async function checkAreaForNewIncidence(area) {
         firstIncidenceCheck
     } = area;
 
-    if (areaMetas.updated !== lastestUpdate) {
-        lastestUpdate = areaMetas.updated;
+    if (areaMetas.updated === lastestUpdate) {
+        return area;
+    }
 
-        const currentCases = areaMetas.total.cases;
+    lastestUpdate = areaMetas.updated;
+    const currentCases = areaMetas.total.cases;
 
-        // If the first iteration, run an initial check of number of cases
-        if (firstIncidenceCheck) {
-            previousCases = currentCases;
-            firstIncidenceCheck = false;
-        } else if (previousCases < currentCases) {
-            const difference = currentCases - previousCases;
-            previousCases = currentCases;
-            const locationName = areaMetas.area.name;
-            const trend = response.items[2].latest;
-            const changeLast14Days = getChangeLast14Days(response.items[1].data);
-            console.log(` - Found new incidence(s) for ${locationName}`);
+    // If the first iteration, run an initial check of number of cases
+    if (firstIncidenceCheck) {
+        previousCases = currentCases;
+        firstIncidenceCheck = false;
+    } else if (previousCases < currentCases) {
+        const difference = currentCases - previousCases;
+        previousCases = currentCases;
+        const locationName = areaMetas.area.name;
+        const trend = response.items[2].latest;
+        const changeLast14Days = getChangeLast14Days(response.items[1].data);
+        console.log(` - Found new incidence(s) for ${locationName}`);
 
-            const embedMessage = new Discord.MessageEmbed()
-                .setColor('#b5312f')
-                .setTitle(`🤒⚠ **New COVID-19 incidence${difference > 1 ? 's' : ''}** ⚠🤒`)
-                .addField('Location', locationName)
-                .addField('Updated', dayjs(lastestUpdate).format(config.timeFormat))
-                .addField('New', difference)
-                .addField('Total', currentCases)
-                .addField('Trend', `${trends[trend.key]}`)
-                .addField('Change last 14 days', `+${changeLast14Days}`)
-                .addField('URL', `View more information [here](${area.visualCasesUrl})`);
+        const embedMessage = new Discord.MessageEmbed()
+            .setColor('#b5312f')
+            .setTitle(`🤒⚠ **New COVID-19 incidence${difference > 1 ? 's' : ''}** ⚠🤒`)
+            .addField('Location', locationName)
+            .addField('Updated', dayjs(lastestUpdate).format(config.timeFormat))
+            .addField('New', difference)
+            .addField('Total', currentCases)
+            .addField('Trend', `${trends[trend.key]}`)
+            .addField('Change last 14 days', `+${changeLast14Days}`)
+            .addField('URL', `View more information [here](${area.visualCasesUrl})`);
 
-            await discordHookClient.send(embedMessage);
-        }
+        await discordHookClient.send(embedMessage);
     }
 
     return {
