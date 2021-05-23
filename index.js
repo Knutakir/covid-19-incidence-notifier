@@ -65,9 +65,8 @@ function getChangeLast14Days(timeSeries) {
 }
 
 async function checkAreaForNewIncidence(area) {
-    const response = await got(area.casesUrl, {headers: httpHeader});
-    const responseBody = JSON.parse(response.body);
-    const areaMetas = responseBody.meta;
+    const response = await got(area.casesUrl, {headers: httpHeader}).json();
+    const areaMetas = response.meta;
 
     let {
         lastestUpdate,
@@ -88,8 +87,8 @@ async function checkAreaForNewIncidence(area) {
             const difference = currentCases - previousCases;
             previousCases = currentCases;
             const locationName = areaMetas.area.name;
-            const trend = responseBody.items[2].latest;
-            const changeLast14Days = getChangeLast14Days(responseBody.items[1].data);
+            const trend = response.items[2].latest;
+            const changeLast14Days = getChangeLast14Days(response.items[1].data);
             console.log(` - Found new incidence(s) for ${locationName}`);
 
             const embedMessage = new Discord.MessageEmbed()
