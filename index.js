@@ -1,11 +1,11 @@
-const Discord = require('discord.js');
-const got = require('got');
-const dayjs = require('dayjs');
-const advancedFormat = require('dayjs/plugin/advancedFormat');
-const {httpHeader} = require('./util');
-const config = require('./config');
+import {MessageEmbed, WebhookClient} from 'discord.js';
+import got from 'got';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat.js';
+import util from './util.js';
+import config from './config.js';
 
-const {discordWebhookUrl, discordWebhookID, discordWebhookToken} = config;
+const {discordWebhookUrl, discordWebhookId, discordWebhookToken} = config;
 
 // Load dayjs locale if it's not the default `en` (English)
 if (config.timeLocale !== 'en') {
@@ -20,16 +20,11 @@ dayjs.extend(advancedFormat);
 dayjs.locale(config.timeLocale);
 
 // Check if either Discord Webhook URL or Discord Webhook ID and token is provided
-if (!(discordWebhookUrl || (discordWebhookID !== '' && discordWebhookToken !== ''))) {
+if (!(discordWebhookUrl || (discordWebhookId !== '' && discordWebhookToken !== ''))) {
     throw new Error('You need to specify either Discord Webhook URL or both Discord Webhook ID and token!');
 }
 
-// Retrieve the ID and token from the Webhook URL
-// This is from the Discord Webhook URL format:
-// 'https://discord.com/api/webhooks/<ID_HERE>/<TOKEN_HERE>'
-// If the Webhook URL is empty get the values from the provided ID and token
-const [webhookID, webhookToken] = discordWebhookUrl ? discordWebhookUrl.split('/').splice(5, 2) : [discordWebhookID, discordWebhookToken];
-const discordHookClient = new Discord.WebhookClient(webhookID, webhookToken);
+const webhookClient = discordWebhookUrl ? new WebhookClient({url: discordWebhookUrl}) : new WebhookClient({id: discordWebhookId, token: discordWebhookToken});
 
 // Wait for a specified time (milliseconds)
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -65,7 +60,7 @@ function getChangeLast14Days(timeSeries) {
 }
 
 async function checkAreaForNewIncidence(area) {
-    const response = await got(area.casesUrl, {headers: httpHeader}).json();
+    const response = await got(area.casesUrl, {headers: util.httpHeader}).json();
     const areaMetas = response.meta;
 
     let {
@@ -93,18 +88,18 @@ async function checkAreaForNewIncidence(area) {
         const changeLast14Days = getChangeLast14Days(response.items[1].data);
         console.log(` - Found new incidence(s) for ${locationName}`);
 
-        const embedMessage = new Discord.MessageEmbed()
+        const embedMessage = new MessageEmbed()
             .setColor('#b5312f')
             .setTitle(`🤒⚠ **New COVID-19 incidence${difference > 1 ? 's' : ''}** ⚠🤒`)
             .addField('Location', locationName)
             .addField('Updated', dayjs(lastestUpdate).format(config.timeFormat))
-            .addField('New', difference)
-            .addField('Total', currentCases)
+            .addField('New', `${difference}`)
+            .addField('Total', `${currentCases}`)
             .addField('Trend', `${trends[trend.key]}`)
             .addField('Change last 14 days', `+${changeLast14Days}`)
             .addField('URL', `View more information [here](${area.visualCasesUrl})`);
 
-        await discordHookClient.send(embedMessage);
+        await webhookClient.send({embeds: [embedMessage]});
     }
 
     return {
