@@ -2,6 +2,8 @@ import {MessageEmbed, WebhookClient} from 'discord.js';
 import got from 'got';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat.js';
+// eslint-disable-next-line import/no-unresolved
+import {setTimeout} from 'timers/promises';
 import util from './util.js';
 import config from './config.js';
 
@@ -25,9 +27,6 @@ if (!(discordWebhookUrl || (discordWebhookId !== '' && discordWebhookToken !== '
 }
 
 const webhookClient = discordWebhookUrl ? new WebhookClient({url: discordWebhookUrl}) : new WebhookClient({id: discordWebhookId, token: discordWebhookToken});
-
-// Wait for a specified time (milliseconds)
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const areaIds = config.areaIds.split(',').map(areaId => areaId.trim());
 const areas = areaIds.map(areaId => {
@@ -125,7 +124,7 @@ async function checkAreaForNewIncidence(area) {
             console.log(error);
         } finally {
             // eslint-disable-next-line no-await-in-loop
-            await wait(config.waitTimeout);
+            await setTimeout(config.waitTimeout);
         }
     }
 })();
