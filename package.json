@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Knutakir/covid-19-incidence-notifier.git"
+    "url": "git+https://github.com/knutkirkhorn/covid-19-incidence-notifier.git"
   },
   "keywords": [
     "covid-19",
@@ -26,9 +26,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Knutakir/covid-19-incidence-notifier/issues"
+    "url": "https://github.com/knutkirkhorn/covid-19-incidence-notifier/issues"
   },
-  "homepage": "https://github.com/Knutakir/covid-19-incidence-notifier#readme",
+  "homepage": "https://github.com/knutkirkhorn/covid-19-incidence-notifier#readme",
   "dependencies": {
     "dayjs": "^1.10.6",
     "discord.js": "^13.0.1",

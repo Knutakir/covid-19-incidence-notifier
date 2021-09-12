@@ -6,7 +6,7 @@
 Notifies on Discord if there are new COVID-19 incidences in your location (Norway only). Uses the [Corona API](https://redutv-api.vg.no/corona/v1/) from [vg.no](https://www.vg.no/) about incidences in municipalities. It notifies to a Discord channel using [Discord Webhooks](https://discord.com/developers/docs/resources/webhook).
 
 <div align="center">
-	<img src="https://raw.githubusercontent.com/Knutakir/covid-19-incidence-notifier/main/media/top-image.png" alt="COVID-19 incidence notification example">
+	<img src="https://raw.githubusercontent.com/knutkirkhorn/covid-19-incidence-notifier/main/media/top-image.png" alt="COVID-19 incidence notification example">
 </div>
 
 ## Usage
@@ -86,4 +86,4 @@ Provide these with the docker run command or store these in a `.env` file. Only 
     - Default: `dddd D MMMM YYYY HH:mm`
 
 ## License
-MIT © [Knut Kirkhorn](https://github.com/Knutakir/covid-19-incidence-notifier/blob/main/LICENSE)
+MIT © [Knut Kirkhorn](https://github.com/knutkirkhorn/covid-19-incidence-notifier/blob/main/LICENSE)
