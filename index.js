@@ -83,8 +83,9 @@ async function checkAreaForNewIncidence(area) {
         const difference = currentCases - previousCases;
         previousCases = currentCases;
         const locationName = areaMetas.area.name;
-        const trend = response.items[2].latest;
-        const changeLast14Days = getChangeLast14Days(response.items[1].data);
+        const trend = response.items.find(item => item.id === 'trend-cases').latest;
+        const cases = response.items.find(item => item.id === 'cases').data;
+        const changeLast14Days = getChangeLast14Days(cases);
         console.log(` - Found new incidence(s) for ${locationName}`);
 
         const embedMessage = new MessageEmbed()
