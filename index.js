@@ -9,17 +9,8 @@ import config from './config.js';
 
 const {discordWebhookUrl, discordWebhookId, discordWebhookToken} = config;
 
-// Load dayjs locale if it's not the default `en` (English)
-if (config.timeLocale !== 'en') {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    require(`dayjs/locale/${config.timeLocale}`);
-}
-
 // Use extended formatting
 dayjs.extend(advancedFormat);
-
-// Set the locale for the deadline
-dayjs.locale(config.timeLocale);
 
 // Check if either Discord Webhook URL or Discord Webhook ID and token is provided
 if (!(discordWebhookUrl || (discordWebhookId !== '' && discordWebhookToken !== ''))) {
@@ -51,6 +42,16 @@ const trends = {
     flat: 'Flat',
     increasing: 'Increasing'
 };
+
+async function initializeLocale() {
+    // Load dayjs locale if it's not the default `en` (English)
+    if (config.timeLocale !== 'en') {
+        await import(`dayjs/locale/${config.timeLocale}.js`);
+    }
+
+    // Set the locale for the update time
+    dayjs.locale(config.timeLocale);
+}
 
 function getChangeLast14Days(timeSeries) {
     const last14Days = timeSeries.slice(-14);
@@ -111,6 +112,8 @@ async function checkAreaForNewIncidence(area) {
 }
 
 (async () => {
+    await initializeLocale();
+
     // Make it run forever
     while (true) {
         try {
