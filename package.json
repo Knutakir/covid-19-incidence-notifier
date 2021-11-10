@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/knutkirkhorn/covid-19-incidence-notifier#readme",
   "dependencies": {
-    "dayjs": "^1.10.6",
     "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
     "got": "^11.8.2"

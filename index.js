@@ -1,16 +1,11 @@
-import {MessageEmbed, WebhookClient} from 'discord.js';
+import {Formatters, MessageEmbed, WebhookClient} from 'discord.js';
 import got from 'got';
-import dayjs from 'dayjs';
-import advancedFormat from 'dayjs/plugin/advancedFormat.js';
 // eslint-disable-next-line import/no-unresolved
 import {setTimeout} from 'timers/promises';
 import util from './util.js';
 import config from './config.js';
 
 const {discordWebhookUrl, discordWebhookId, discordWebhookToken} = config;
-
-// Use extended formatting
-dayjs.extend(advancedFormat);
 
 // Check if either Discord Webhook URL or Discord Webhook ID and token is provided
 if (!(discordWebhookUrl || (discordWebhookId !== '' && discordWebhookToken !== ''))) {
@@ -42,16 +37,6 @@ const trends = {
     flat: 'Flat',
     increasing: 'Increasing'
 };
-
-async function initializeLocale() {
-    // Load dayjs locale if it's not the default `en` (English)
-    if (config.timeLocale !== 'en') {
-        await import(`dayjs/locale/${config.timeLocale}.js`);
-    }
-
-    // Set the locale for the update time
-    dayjs.locale(config.timeLocale);
-}
 
 function getChangeLast14Days(timeSeries) {
     const last14Days = timeSeries.slice(-14);
@@ -93,7 +78,7 @@ async function checkAreaForNewIncidence(area) {
             .setColor('#b5312f')
             .setTitle(`🤒⚠ **New COVID-19 incidence${difference > 1 ? 's' : ''}** ⚠🤒`)
             .addField('Location', locationName)
-            .addField('Updated', dayjs(lastestUpdate).format(config.timeFormat))
+            .addField('Updated', Formatters.time(new Date(lastestUpdate), Formatters.TimestampStyles.RelativeTime))
             .addField('New', `${difference}`)
             .addField('Total', `${currentCases}`)
             .addField('Trend', `${trends[trend.key]}`)
@@ -112,8 +97,6 @@ async function checkAreaForNewIncidence(area) {
 }
 
 (async () => {
-    await initializeLocale();
-
     // Make it run forever
     while (true) {
         try {

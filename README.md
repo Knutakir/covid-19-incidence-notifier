@@ -78,12 +78,6 @@ Provide these with the docker run command or store these in a `.env` file. Only 
     - The area ID(s) of the municipality/municipalities to notify about new incidences. Specified as a single four digit number or comma separeted list of four digit numbers.
     - Default: `1577` (Volda)
     - Different municipality IDs can be viewed [here](https://redutv-api.vg.no/corona/v1/areas/municipalities/).
-- `TIME_LOCALE` ***(optional)***
-    - The time locale for the `Updated` field in the Discord message.
-    - Default: `en`
-- `TIME_FORMAT` ***(optional)***
-    - The time format for the `Updated` field in the Discord message.
-    - Default: `dddd D MMMM YYYY HH:mm`
 
 ## License
 MIT © [Knut Kirkhorn](https://github.com/knutkirkhorn/covid-19-incidence-notifier/blob/main/LICENSE)
