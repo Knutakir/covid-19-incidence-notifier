@@ -35,7 +35,8 @@ const areas = areaIds.map(areaId => {
 const trends = {
     lessThanMinLimit: 'No change',
     flat: 'Flat',
-    increasing: 'Increasing'
+    increasing: 'Increasing',
+    decreasing: 'Decreasing'
 };
 
 function getChangeLast14Days(timeSeries) {
