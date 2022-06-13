@@ -26,7 +26,7 @@ const areas = areaIds.map(areaId => {
     return {
         casesUrl: `https://redutv-api.vg.no/corona/v1/areas/municipalities/${areaId}/key`,
         visualCasesUrl: `https://www.vg.no/spesial/2020/corona/fylker/${countyId}/kommuner/${areaId}`,
-        lastestUpdate: '',
+        latestUpdate: '',
         previousCases: 0,
         firstIncidenceCheck: true
     };
@@ -50,16 +50,16 @@ async function checkAreaForNewIncidence(area) {
     const areaMetas = response.meta;
 
     let {
-        lastestUpdate,
+        latestUpdate,
         previousCases,
         firstIncidenceCheck
     } = area;
 
-    if (areaMetas.updated === lastestUpdate) {
+    if (areaMetas.updated === latestUpdate) {
         return area;
     }
 
-    lastestUpdate = areaMetas.updated;
+    latestUpdate = areaMetas.updated;
     const currentCases = areaMetas.total.cases;
 
     // If the first iteration, run an initial check of number of cases
@@ -79,7 +79,7 @@ async function checkAreaForNewIncidence(area) {
             .setColor('#b5312f')
             .setTitle(`🤒⚠ **New COVID-19 incidence${difference > 1 ? 's' : ''}** ⚠🤒`)
             .addField('Location', locationName)
-            .addField('Updated', Formatters.time(new Date(lastestUpdate), Formatters.TimestampStyles.RelativeTime))
+            .addField('Updated', Formatters.time(new Date(latestUpdate), Formatters.TimestampStyles.RelativeTime))
             .addField('New', `${difference}`)
             .addField('Total', `${currentCases}`)
             .addField('Trend', `${trends[trend.key]}`)
@@ -91,7 +91,7 @@ async function checkAreaForNewIncidence(area) {
 
     return {
         ...area,
-        lastestUpdate,
+        latestUpdate,
         previousCases,
         firstIncidenceCheck
     };
