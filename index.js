@@ -1,18 +1,12 @@
-import {Formatters, MessageEmbed, WebhookClient} from 'discord.js';
+import {Formatters, MessageEmbed} from 'discord.js';
 import got from 'got';
 // eslint-disable-next-line import/no-unresolved
 import {setTimeout} from 'timers/promises';
+import discordWebhookWrapper from 'discord-webhook-wrapper';
 import util from './util.js';
 import config from './config.js';
 
-const {discordWebhookUrl, discordWebhookId, discordWebhookToken} = config;
-
-// Check if either Discord Webhook URL or Discord Webhook ID and token is provided
-if (!(discordWebhookUrl || (discordWebhookId !== '' && discordWebhookToken !== ''))) {
-    throw new Error('You need to specify either Discord Webhook URL or both Discord Webhook ID and token!');
-}
-
-const webhookClient = discordWebhookUrl ? new WebhookClient({url: discordWebhookUrl}) : new WebhookClient({id: discordWebhookId, token: discordWebhookToken});
+const webhookClient = discordWebhookWrapper(config);
 
 const areaIds = config.areaIds.split(',').map(areaId => areaId.trim());
 const areas = areaIds.map(areaId => {

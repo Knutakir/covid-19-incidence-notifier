@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/knutkirkhorn/covid-19-incidence-notifier#readme",
   "dependencies": {
+    "discord-webhook-wrapper": "^1.0.0",
     "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
     "got": "^11.8.2"
