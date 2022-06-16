@@ -91,22 +91,20 @@ async function checkAreaForNewIncidence(area) {
     };
 }
 
-(async () => {
-    // Make it run forever
-    while (true) {
-        try {
-            console.log('Checking for COVID-19 incidences at:', new Date());
+// Make it run forever
+while (true) {
+    try {
+        console.log('Checking for COVID-19 incidences at:', new Date());
 
-            for (let i = 0; i < areas.length; i++) {
-                const area = areas[i];
-                // eslint-disable-next-line no-await-in-loop
-                areas[i] = await checkAreaForNewIncidence(area);
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
+        for (let i = 0; i < areas.length; i++) {
+            const area = areas[i];
             // eslint-disable-next-line no-await-in-loop
-            await setTimeout(config.waitTimeout);
+            areas[i] = await checkAreaForNewIncidence(area);
         }
+    } catch (error) {
+        console.log(error);
+    } finally {
+        // eslint-disable-next-line no-await-in-loop
+        await setTimeout(config.waitTimeout);
     }
-})();
+}
