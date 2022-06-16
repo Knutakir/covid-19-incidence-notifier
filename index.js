@@ -1,6 +1,6 @@
 import {Formatters, MessageEmbed} from 'discord.js';
-import got from 'got';
 // eslint-disable-next-line import/no-unresolved
+import got from 'got';
 import {setTimeout} from 'timers/promises';
 import discordWebhookWrapper from 'discord-webhook-wrapper';
 import util from './util.js';
@@ -98,13 +98,11 @@ while (true) {
 
         for (let i = 0; i < areas.length; i++) {
             const area = areas[i];
-            // eslint-disable-next-line no-await-in-loop
             areas[i] = await checkAreaForNewIncidence(area);
         }
     } catch (error) {
         console.log(error);
     } finally {
-        // eslint-disable-next-line no-await-in-loop
         await setTimeout(config.waitTimeout);
     }
 }
