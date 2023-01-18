@@ -1,4 +1,5 @@
 # covid-19-incidence-notifier
+
 > 🤒⏰ Get notified about new COVID-19 incidences in your location (Norway only)
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/knutkirkhorn/covid-19-incidence-notifier)](https://hub.docker.com/r/knutkirkhorn/covid-19-incidence-notifier) [![Docker Image Size](https://badgen.net/docker/size/knutkirkhorn/covid-19-incidence-notifier)](https://hub.docker.com/r/knutkirkhorn/covid-19-incidence-notifier)
@@ -10,8 +11,11 @@ Notifies on Discord if there are new COVID-19 incidences in your location (Norwa
 </div>
 
 ## Usage
+
 ### Within a Docker container
+
 #### From Docker Hub Image
+
 This will pull the image from [Docker Hub](https://hub.docker.com/) and run the image with the provided configuration for web hooks as below. One can provide only the Webhook URL or both the Webhook ID and token.
 
 ```sh
@@ -32,6 +36,7 @@ $ docker run -d \
 ```
 
 #### From source code
+
 ```sh
 # Build container from source
 $ docker build -t covid-19-incidence-notifier .
@@ -53,6 +58,7 @@ $ docker run -d \
 ```
 
 ### Outside of a Docker container
+
 ```sh
 # Install
 $ npm install
@@ -62,6 +68,7 @@ $ npm start
 ```
 
 ### Environment variables
+
 Provide these with the docker run command or store these in a `.env` file. Only `DISCORD_WEBHOOK_URL` or both `DISCORD_WEBHOOK_ID` and `DISCORD_WEBHOOK_TOKEN` are required, but other values are recommended to change to its own personal usage.
 
 - `DISCORD_WEBHOOK_URL`
@@ -78,6 +85,3 @@ Provide these with the docker run command or store these in a `.env` file. Only 
     - The area ID(s) of the municipality/municipalities to notify about new incidences. Specified as a single four digit number or comma separeted list of four digit numbers.
     - Default: `1577` (Volda)
     - Different municipality IDs can be viewed [here](https://redutv-api.vg.no/corona/v1/areas/municipalities/).
-
-## License
-MIT © [Knut Kirkhorn](https://github.com/knutkirkhorn/covid-19-incidence-notifier/blob/main/LICENSE)
