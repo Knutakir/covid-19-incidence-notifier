@@ -3,7 +3,7 @@ import {Formatters, MessageEmbed} from 'discord.js';
 import got from 'got';
 import {setTimeout} from 'timers/promises';
 import discordWebhookWrapper from 'discord-webhook-wrapper';
-import util from './util.js';
+import getPackageUserAgent from 'package-user-agent';
 import config from './config.js';
 
 const webhookClient = discordWebhookWrapper(config);
@@ -40,7 +40,8 @@ function getChangeLast14Days(timeSeries) {
 }
 
 async function checkAreaForNewIncidence(area) {
-    const response = await got(area.casesUrl, {headers: util.httpHeader}).json();
+    const packageUserAgent = await getPackageUserAgent();
+    const response = await got(area.casesUrl, {headers: packageUserAgent}).json();
     const areaMetas = response.meta;
 
     let {
