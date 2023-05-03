@@ -1,5 +1,4 @@
 import {Formatters, MessageEmbed} from 'discord.js';
-// eslint-disable-next-line import/no-unresolved
 import got from 'got';
 import {setTimeout} from 'timers/promises';
 import discordWebhookWrapper from 'discord-webhook-wrapper';
